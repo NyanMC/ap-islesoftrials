@@ -346,7 +346,7 @@ function check_interact()
 		pbeholdi = chest.ico
 		pbeholdt = 60
 		chest:act()
-		if (chest.mus>-1) music(chest.mus)
+		-- if (chest.mus>-1) music(chest.mus)
 		if ((not chest.shapelock) or shape>=5) set_map_tile(px,py-7,22)
 		return true
 	end
@@ -659,6 +659,7 @@ end
 
 function draw_title()
 	cls(0)
+	print("0.1.0B",0,0)
 	print("isles of trials",34,40)
 	print("made by chromanyan",28,48)
 	print("player drawn by @twilightstarart",0,56)
@@ -817,6 +818,15 @@ function give_vanilla_item(typ)
 		feather += 1
 	end
 end
+
+function ap_jingle()
+	local jingle = peek(0x5f80+35)
+	
+	if jingle > 0 then
+		music(jingle-1)
+		poke(0x5f80+35,0)
+	end
+end
 -->8
 -- base p8 functions
 
@@ -866,6 +876,8 @@ function _update()
 		end
 	 return
 	end
+	
+	ap_jingle()
 
 	if (pbeholdt>0) return
 	
