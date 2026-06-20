@@ -17,3 +17,5 @@ The goal is to reach the upper left corner of the map and open its chest to rece
 
 
 The version of Isles of Trials shipped with the AP integration has been modified to use the GPIO layer to communicate with archipelago.js, along with fully modifying the chest table for proper shuffling.
+
+Use the client zip to connect, or go here: https://www.chromanyan.page/islestrialsap/
