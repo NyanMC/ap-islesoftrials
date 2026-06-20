@@ -15,7 +15,12 @@ A small adventure game where you travel across small islands, opening chests, an
 
 The goal is to reach the upper left corner of the map and open its chest to receive a nice big trophy.
 
-
 The version of Isles of Trials shipped with the AP integration has been modified to use the GPIO layer to communicate with archipelago.js, along with fully modifying the chest table for proper shuffling.
 
 Use the client zip to connect, or go here: https://www.chromanyan.page/islestrialsap/
+
+
+
+The AP version of the game features a sprite based on the Archipelago icon. The Archipelago icon is licensed as follows:
+
+© 2022 by Krista Corkos and Christopher Wilson is licensed under Attribution-NonCommercial 4.0 International. To view a copy of this license, visit http://creativecommons.org/licenses/by-nc/4.0/
