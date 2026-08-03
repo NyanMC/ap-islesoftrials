@@ -1,3 +1,6 @@
+from collections.abc import Mapping
+from typing import Any
+
 from BaseClasses import Region, Location, Item, ItemClassification, Tutorial
 from worlds.AutoWorld import World, WebWorld
 from worlds.LauncherComponents import (
@@ -7,6 +10,8 @@ from worlds.LauncherComponents import (
     )
 from collections import defaultdict
 from rule_builder.rules import Rule, Or, HasAll, Has
+
+from . import Options as islestrials_options
 
 json_world = {
     "region_map": {
@@ -97,20 +102,21 @@ json_world = {
             "green key"
         ],
         "useful_items": [
-            "heart container 1",
+            "heart container",
             "heart container 2",
             "heart container 3",
-            "swift feather 1",
+            "swift feather",
             "swift feather 2",
             "swift feather 3"
         ],
         "filler_items": [
-            "mysterious shape"
+            "mysterious shape",
+            "temporary heart"
         ]
     },
     "base_id": 19827373737,
     "game_name": "Isles of Trials",
-    "filler_name": "mysterious shape",
+    "filler_name": "temporary heart",
     "item_name_groups": {
         "Weapons": [
             "progressive weapon",
@@ -127,12 +133,12 @@ json_world = {
             "green key"
         ],
         "Hearts": [
-            "heart container 1",
+            "heart container",
             "heart container 2",
             "heart container 3"
         ],
         "Feathers": [
-            "swift feather 1",
+            "swift feather",
             "swift feather 2",
             "swift feather 3"
         ]
@@ -171,13 +177,14 @@ classification_lookup = defaultdict(lambda: ItemClassification.useful, {
     **{n: ItemClassification.filler for n in json_world["items"]["filler_items"]}
 })
 
-
 class IslesTrialsWorld(World):
     """
     Travel between islands and loot chests in this small PICO-8 adventure game.
     """
     game = json_world["game_name"]
     web = IslesTrialsWeb()
+    options_dataclass = islestrials_options.IslesTrialsOptions
+    options: islestrials_options.IslesTrialsOptions
     location_name_to_id = {name: json_world["base_id"]+location_list.index(name) for name in location_list}
     item_name_to_id = {name: json_world["base_id"]+item_list.index(name) for name in item_list}
     item_name_groups = {name: set(items) for name, items in json_world["item_name_groups"].items()}
@@ -251,7 +258,10 @@ class IslesTrialsWorld(World):
 
     def get_filler_item_name(self) -> str:
         # filler_name should be a list and this should choose with self.random
-        return json_world["filler_name"]
+        if self.random.randint(0,1) == 0:
+            return "mysterious shape"
+        else:
+            return "temporary heart"
 
 # common World methods
     def create_regions(self) -> None:
@@ -288,8 +298,20 @@ class IslesTrialsWorld(World):
         self.multiworld.itempool += itempool
 
     def create_item(self, name: str) -> "Item":
+        # this is really janky i'm so sorry
+        truename = name
+        if (truename == "heart container 2" or truename == "heart container 3"):
+            truename = "heart container"
+        if (truename == "swift feather 2" or truename == "swift feather 3"):
+            truename = "swift feather"
         return TemplateItem(
-            name,
-            self.get_item_classification(name),
-            self.item_name_to_id.get(name, None),
+            truename,
+            self.get_item_classification(truename),
+            self.item_name_to_id.get(truename, None),
             self.player)
+    
+    def fill_slot_data(self) -> Mapping[str, Any]:
+        # If you need access to the player's chosen options on the client side, there is a helper for that.
+        return self.options.as_dict(
+            "player_sprite"
+        )
