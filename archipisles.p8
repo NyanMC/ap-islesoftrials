@@ -15,6 +15,7 @@ sword_hitbox_corners = {
 }
 
 misty = false
+meow = 0
 
 chests = {
 	x81y38={ico=78,mus=1,act=(function()
@@ -677,12 +678,12 @@ end
 
 function draw_title()
 	cls(0)
-	print("0.2.0D",0,0)
-	print("isles of trials",34,40)
-	print("made by chromanyan",28,48)
+	print("0.2.0E",0,0,7)
+	print("isles of trials",34,32)
+	print("made by chromanyan",28,48,6)
 	print("player drawn by @twilightstarart",0,56)
 	print("item jingles by newsoupvi",14,64)
-	print("press 🅾️ to start",30,72)
+	print("press 🅾️ to start",30,80,7)
 end
 
 function stay_sane()
@@ -750,6 +751,15 @@ function draw_world_map()
 			end
 		end
 	end
+end
+
+function mu()
+	if misty then
+		sfx(23)
+	else
+		sfx(22)
+	end
+	meow = 4
 end
 -->8
 -- ap stuff
@@ -933,11 +943,19 @@ function _draw()
 	draw_sword()
 	draw_player()
 	if (pbubblemove==0) draw_bubbles()
+	
+	if meow>0 then
+		local mu_type = misty and "YIP" or "MEOW"
+		local mu_offset = misty and 6 or 8
+		print(mu_type,px-mu_offset,py-12,7)
+	end
+	
 	draw_hud()
 end
 
 function _update()
 	stay_sane()
+	if (meow>0) meow -= 1
 	if title then
 		if btnp(🅾️) then
 			title = false
@@ -964,7 +982,11 @@ function _update()
 	move_player()
 	move_fireball()
 	move_spinners()
-	if (stype>0 or sfire>0) update_sword()
+	if stype>0 or sfire>0 then
+	 update_sword()
+	elseif btnp(❎) then
+		mu()
+	end
 	check_for_harm()
 	test_bubble_collide()
 	
@@ -1288,6 +1310,8 @@ __sfx__
 11100000000000000000000000000000000000000000000000000000000000000000000000000000000000002a7302a7302a7202a710257302573025720257102a7302a7302a7202a71025730257302572025710
 091000001a5501a5401a5301a52019550195401953019520125501254012530125201e5501e5401e5301e5201d5501d5401d5301d520165501654016530165202255022550225402254022530225302252022510
 111000002c7302c7302c7202c71025730257302572025710000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+010300001d1541f1502015021150201501d1550000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
+010400002f754327503375032755220001e0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 __music__
 04 03084344
 04 04094344
